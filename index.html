@@ -161,6 +161,48 @@
                         </div>
                     </div>
 
+                    <!-- Photo Upload -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-camera"></i> Room Photo Analysis (Optional)</h3>
+                        <p class="section-description">Upload a photo of your room for enhanced visual analysis and personalized recommendations.</p>
+                        
+                        <div class="photo-upload-container">
+                            <div class="photo-upload-area" id="photoUploadArea">
+                                <div class="upload-content">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <h4>Upload Room Photo</h4>
+                                    <p>Drag & drop your photo here or click to browse</p>
+                                    <small>Supports JPG, PNG, WebP (Max 10MB)</small>
+                                </div>
+                                <input type="file" id="roomPhoto" accept="image/*" hidden>
+                            </div>
+                            
+                            <div class="photo-preview" id="photoPreview" style="display: none;">
+                                <div class="preview-header">
+                                    <h4><i class="fas fa-image"></i> Photo Preview</h4>
+                                    <button type="button" class="remove-photo" id="removePhoto">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <img id="previewImage" alt="Room preview">
+                                <div class="photo-analysis-status" id="photoAnalysisStatus">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    <span>Analyzing photo...</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="photo-tips">
+                            <h4><i class="fas fa-lightbulb"></i> Photo Tips for Best Analysis:</h4>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Take photo from the entrance/doorway</li>
+                                <li><i class="fas fa-check"></i> Ensure good lighting and clear view</li>
+                                <li><i class="fas fa-check"></i> Include major furniture and decor elements</li>
+                                <li><i class="fas fa-check"></i> Avoid close-ups, capture the whole space</li>
+                            </ul>
+                        </div>
+                    </div>
+
                     <!-- Personal Information -->
                     <div class="form-section">
                         <h3><i class="fas fa-user"></i> Personal Information (Optional)</h3>

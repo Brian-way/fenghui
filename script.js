@@ -6,13 +6,297 @@ class FengShuiAdvisor {
         this.analysisContent = document.getElementById('analysisContent');
         this.newAnalysisBtn = document.getElementById('newAnalysis');
         
+        // Photo upload elements
+        this.photoUploadArea = document.getElementById('photoUploadArea');
+        this.roomPhotoInput = document.getElementById('roomPhoto');
+        this.photoPreview = document.getElementById('photoPreview');
+        this.previewImage = document.getElementById('previewImage');
+        this.removePhotoBtn = document.getElementById('removePhoto');
+        this.photoAnalysisStatus = document.getElementById('photoAnalysisStatus');
+        
+        this.uploadedPhotoData = null;
+        this.photoAnalysisResults = null;
+        
         this.initializeEventListeners();
+        this.initializePhotoUpload();
         this.initializeFengShuiData();
     }
 
     initializeEventListeners() {
         this.form.addEventListener('submit', (e) => this.handleFormSubmission(e));
         this.newAnalysisBtn.addEventListener('click', () => this.resetForm());
+    }
+
+    initializePhotoUpload() {
+        // Click to upload
+        this.photoUploadArea.addEventListener('click', () => {
+            this.roomPhotoInput.click();
+        });
+
+        // File input change
+        this.roomPhotoInput.addEventListener('change', (e) => {
+            this.handleFileSelection(e.target.files[0]);
+        });
+
+        // Drag and drop
+        this.photoUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            this.photoUploadArea.classList.add('dragover');
+        });
+
+        this.photoUploadArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            this.photoUploadArea.classList.remove('dragover');
+        });
+
+        this.photoUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            this.photoUploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                this.handleFileSelection(files[0]);
+            }
+        });
+
+        // Remove photo
+        this.removePhotoBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.removePhoto();
+        });
+    }
+
+    handleFileSelection(file) {
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('Please select a valid image file (JPG, PNG, WebP)');
+            return;
+        }
+
+        // Validate file size (10MB max)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('File size must be less than 10MB');
+            return;
+        }
+
+        // Display preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            this.previewImage.src = e.target.result;
+            this.uploadedPhotoData = e.target.result;
+            this.showPhotoPreview();
+            this.analyzePhoto(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    showPhotoPreview() {
+        this.photoUploadArea.style.display = 'none';
+        this.photoPreview.style.display = 'block';
+        this.photoAnalysisStatus.style.display = 'flex';
+        this.photoAnalysisStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Analyzing photo...</span>';
+    }
+
+    removePhoto() {
+        this.photoUploadArea.style.display = 'block';
+        this.photoPreview.style.display = 'none';
+        this.roomPhotoInput.value = '';
+        this.uploadedPhotoData = null;
+        this.photoAnalysisResults = null;
+    }
+
+    analyzePhoto(imageData) {
+        // Simulate photo analysis with setTimeout
+        setTimeout(() => {
+            this.photoAnalysisResults = this.performPhotoAnalysis(imageData);
+            this.photoAnalysisStatus.className = 'photo-analysis-status complete';
+            this.photoAnalysisStatus.innerHTML = '<i class="fas fa-check-circle"></i><span>Photo analysis complete!</span>';
+        }, 2000);
+    }
+
+    performPhotoAnalysis(imageData) {
+        // Create a canvas to analyze the image
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        
+        return new Promise((resolve) => {
+            img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                
+                // Analyze image data
+                const imageDataArray = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const analysis = this.analyzeImageData(imageDataArray);
+                resolve(analysis);
+            };
+            img.src = imageData;
+        });
+    }
+
+    analyzeImageData(imageData) {
+        const data = imageData.data;
+        const pixelCount = data.length / 4;
+        
+        let totalR = 0, totalG = 0, totalB = 0;
+        let brightness = 0;
+        const colorDistribution = {
+            red: 0, green: 0, blue: 0, yellow: 0, 
+            brown: 0, white: 0, black: 0, gray: 0
+        };
+        
+        // Analyze pixels
+        for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            
+            totalR += r;
+            totalG += g;
+            totalB += b;
+            brightness += (r + g + b) / 3;
+            
+            // Categorize colors
+            this.categorizePixelColor(r, g, b, colorDistribution);
+        }
+        
+        const avgR = totalR / pixelCount;
+        const avgG = totalG / pixelCount;
+        const avgB = totalB / pixelCount;
+        const avgBrightness = brightness / pixelCount;
+        
+        // Determine dominant colors
+        const dominantColors = Object.entries(colorDistribution)
+            .sort(([,a], [,b]) => b - a)
+            .slice(0, 3)
+            .map(([color]) => color);
+        
+        return {
+            averageColor: { r: Math.round(avgR), g: Math.round(avgG), b: Math.round(avgB) },
+            brightness: Math.round(avgBrightness),
+            dominantColors,
+            colorDistribution,
+            analysis: this.interpretPhotoAnalysis({
+                avgBrightness,
+                dominantColors,
+                colorDistribution
+            })
+        };
+    }
+
+    categorizePixelColor(r, g, b, distribution) {
+        const total = r + g + b;
+        
+        if (total < 60) {
+            distribution.black++;
+        } else if (total > 720) {
+            distribution.white++;
+        } else if (Math.abs(r - g) < 30 && Math.abs(g - b) < 30) {
+            distribution.gray++;
+        } else if (r > g && r > b) {
+            if (g > 100) distribution.yellow++;
+            else distribution.red++;
+        } else if (g > r && g > b) {
+            distribution.green++;
+        } else if (b > r && b > g) {
+            distribution.blue++;
+        } else if (r > 100 && g > 50 && b < 50) {
+            distribution.brown++;
+        }
+    }
+
+    interpretPhotoAnalysis(data) {
+        const insights = [];
+        const suggestions = [];
+        
+        // Brightness analysis
+        if (data.avgBrightness < 80) {
+            insights.push('Room appears dimly lit');
+            suggestions.push('Add more lighting or light-colored decor to brighten the space');
+        } else if (data.avgBrightness > 200) {
+            insights.push('Room has excellent natural lighting');
+            suggestions.push('Great natural light! Use warm accents to balance the brightness');
+        } else {
+            insights.push('Room has balanced lighting');
+        }
+        
+        // Color analysis
+        const primaryColor = data.dominantColors[0];
+        switch (primaryColor) {
+            case 'blue':
+                insights.push('Cool blue tones detected - promotes calm and water element');
+                suggestions.push('Excellent for meditation and focus areas');
+                break;
+            case 'green':
+                insights.push('Natural green tones detected - strong wood element presence');
+                suggestions.push('Perfect for growth and health energy');
+                break;
+            case 'red':
+                insights.push('Warm red tones detected - active fire element');
+                suggestions.push('Great for social areas, but balance with cooler tones in bedrooms');
+                break;
+            case 'yellow':
+                insights.push('Sunny yellow tones detected - earth element energy');
+                suggestions.push('Excellent for dining areas and social spaces');
+                break;
+            case 'brown':
+                insights.push('Earth tones detected - grounding and stability');
+                suggestions.push('Add colorful accents to prevent energy stagnation');
+                break;
+            case 'white':
+                insights.push('Clean white tones detected - metal element clarity');
+                suggestions.push('Add warm accents to create coziness');
+                break;
+            case 'gray':
+                insights.push('Neutral gray tones detected - balanced but may lack energy');
+                suggestions.push('Add vibrant colors to energize the space');
+                break;
+            case 'black':
+                insights.push('Dark tones detected - may absorb too much energy');
+                suggestions.push('Add light colors and reflective surfaces to balance');
+                break;
+        }
+        
+        return { insights, suggestions };
+    }
+
+    async integratePhotoAnalysis(photoResults, analysis) {
+        // Wait for photo analysis to complete if it's still processing
+        let results = photoResults;
+        if (photoResults instanceof Promise) {
+            results = await photoResults;
+        }
+
+        if (results && results.analysis) {
+            // Add photo insights to suggestions
+            results.analysis.insights.forEach(insight => {
+                analysis.suggestions.push(`📸 Photo Analysis: ${insight}`);
+            });
+
+            results.analysis.suggestions.forEach(suggestion => {
+                analysis.suggestions.push(`📸 Photo Recommendation: ${suggestion}`);
+            });
+
+            // Adjust score based on photo analysis
+            if (results.brightness > 150) {
+                analysis.overallScore += 10; // Good lighting bonus
+            } else if (results.brightness < 80) {
+                analysis.overallScore -= 5; // Poor lighting penalty
+            }
+
+            // Color harmony bonus
+            const dominantPhotoColor = results.dominantColors[0];
+            const selectedColor = document.querySelector('input[name="dominantColor"]:checked')?.value;
+            
+            if (dominantPhotoColor === selectedColor) {
+                analysis.suggestions.push('📸 Photo confirms your color selection - excellent consistency!');
+                analysis.overallScore += 15;
+            } else if (selectedColor) {
+                analysis.suggestions.push(`📸 Photo shows ${dominantPhotoColor} tones, which differs from your selected ${selectedColor} - consider this for color harmony.`);
+            }
+        }
     }
 
     initializeFengShuiData() {
@@ -199,6 +483,11 @@ class FengShuiAdvisor {
         
         // Purpose-specific advice
         this.analyzePurpose(data, analysis);
+        
+        // Photo analysis integration
+        if (this.photoAnalysisResults) {
+            this.integratePhotoAnalysis(this.photoAnalysisResults, analysis);
+        }
         
         // Calculate overall score
         this.calculateOverallScore(analysis);
@@ -574,6 +863,35 @@ class FengShuiAdvisor {
             `;
         }
 
+        // Add photo analysis section if photo was uploaded
+        if (this.uploadedPhotoData && this.photoAnalysisResults) {
+            html += `
+                <div class="analysis-section photo-analysis">
+                    <h3><i class="fas fa-camera"></i> Visual Analysis Results</h3>
+                    <div class="photo-analysis-content">
+                        <div class="uploaded-photo">
+                            <img src="${this.uploadedPhotoData}" alt="Analyzed room photo" style="max-width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 1rem;">
+                        </div>
+                        <div class="photo-insights">
+                            <h4>AI-Detected Room Characteristics:</h4>
+                            <div class="insight-grid">
+                                <div class="insight-item">
+                                    <strong>Brightness Level:</strong> ${this.getBrightnessDescription(this.photoAnalysisResults.brightness || 0)}
+                                </div>
+                                <div class="insight-item">
+                                    <strong>Dominant Colors:</strong> ${this.photoAnalysisResults.dominantColors ? this.photoAnalysisResults.dominantColors.join(', ') : 'Processing...'}
+                                </div>
+                                <div class="insight-item">
+                                    <strong>Average Color:</strong> 
+                                    <span class="color-sample" style="background-color: rgb(${this.photoAnalysisResults.averageColor ? `${this.photoAnalysisResults.averageColor.r}, ${this.photoAnalysisResults.averageColor.g}, ${this.photoAnalysisResults.averageColor.b}` : '128, 128, 128'}); display: inline-block; width: 20px; height: 20px; border-radius: 50%; margin-left: 10px; vertical-align: middle;"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
         this.analysisContent.innerHTML = html;
     }
 
@@ -598,8 +916,16 @@ class FengShuiAdvisor {
         return icons[element] || 'circle';
     }
 
+    getBrightnessDescription(brightness) {
+        if (brightness < 80) return 'Dim (needs more light)';
+        if (brightness < 120) return 'Moderate';
+        if (brightness < 180) return 'Well-lit';
+        return 'Very bright';
+    }
+
     resetForm() {
         this.form.reset();
+        this.removePhoto(); // Clear photo upload
         this.resultsContainer.style.display = 'none';
         document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
     }

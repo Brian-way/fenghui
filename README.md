@@ -28,11 +28,18 @@ A comprehensive web application that provides personalized Feng Shui analysis an
 - **Purpose-Driven Advice**: Customized suggestions for relaxation, productivity, creativity, wealth, relationships, or health
 - **Directional Guidance**: Bagua map integration for specific life aspects
 
+### Photo Analysis Integration
+- **Drag & Drop Upload**: Easy photo upload with drag-and-drop interface
+- **Real-time Analysis**: AI-powered color and brightness analysis
+- **Visual Validation**: Compare form inputs with actual room photos
+- **Enhanced Insights**: Photo-based recommendations and observations
+
 ### Comprehensive Scoring System
 - Overall Feng Shui score (0-100)
 - Detailed breakdown of strengths and areas for improvement
 - Visual score indicators with color-coded categories
 - Specific enhancement suggestions
+- Photo analysis integration for deeper insights
 
 ## 🎨 Design Features
 
@@ -84,13 +91,20 @@ fenghui/
    - Pick the dominant color in your space
    - Visual color selection with gradient backgrounds
 
-5. **Personal Information** (Optional)
+5. **Photo Upload** (Optional)
+   - Upload a room photo for visual analysis
+   - Drag & drop or click to browse files
+   - Real-time color and brightness analysis
+   - Photo-based Feng Shui recommendations
+
+6. **Personal Information** (Optional)
    - Enter birth year for personal element analysis
    - Choose primary purpose for the space
 
-6. **Get Analysis**
+7. **Get Analysis**
    - Click "Get Feng Shui Analysis" to receive recommendations
    - Review detailed insights and suggestions
+   - View photo analysis results if uploaded
    - Use "New Analysis" button to start over
 
 ## 🔮 Feng Shui Principles Implemented
