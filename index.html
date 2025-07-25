@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feng Shui Advisory - Harmonize Your Space</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-yin-yang"></i>
+                <h1>Feng Shui Advisory</h1>
+            </div>
+            <p class="tagline">Harmonize your space, enhance your life</p>
+        </header>
+
+        <main class="main-content">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Room Configuration Analysis</h2>
+                    <p>Enter your room details for personalized Feng Shui guidance</p>
+                </div>
+
+                <form id="fengshuiForm" class="fengshui-form">
+                    <!-- Basic Information -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-info-circle"></i> Basic Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="roomType">Room Type</label>
+                                <select id="roomType" required>
+                                    <option value="">Select room type</option>
+                                    <option value="bedroom">Bedroom</option>
+                                    <option value="living">Living Room</option>
+                                    <option value="kitchen">Kitchen</option>
+                                    <option value="office">Home Office</option>
+                                    <option value="dining">Dining Room</option>
+                                    <option value="bathroom">Bathroom</option>
+                                    <option value="entryway">Entryway</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="roomSize">Room Size (sq ft)</label>
+                                <input type="number" id="roomSize" min="50" max="2000" placeholder="e.g., 150">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location & Direction -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-compass"></i> Location & Direction</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="facingDirection">Main Entry Direction</label>
+                                <select id="facingDirection" required>
+                                    <option value="">Select direction</option>
+                                    <option value="north">North</option>
+                                    <option value="northeast">Northeast</option>
+                                    <option value="east">East</option>
+                                    <option value="southeast">Southeast</option>
+                                    <option value="south">South</option>
+                                    <option value="southwest">Southwest</option>
+                                    <option value="west">West</option>
+                                    <option value="northwest">Northwest</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="floorLevel">Floor Level</label>
+                                <select id="floorLevel">
+                                    <option value="ground">Ground Floor</option>
+                                    <option value="second">Second Floor</option>
+                                    <option value="third">Third Floor</option>
+                                    <option value="higher">Higher Floor</option>
+                                    <option value="basement">Basement</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="naturalLight">Natural Light Sources</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" value="north-window"> North-facing windows</label>
+                                <label><input type="checkbox" value="south-window"> South-facing windows</label>
+                                <label><input type="checkbox" value="east-window"> East-facing windows</label>
+                                <label><input type="checkbox" value="west-window"> West-facing windows</label>
+                                <label><input type="checkbox" value="skylight"> Skylights</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Room Configuration -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-home"></i> Room Configuration</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="doorPosition">Door Position</label>
+                                <select id="doorPosition">
+                                    <option value="center">Center of wall</option>
+                                    <option value="left">Left side</option>
+                                    <option value="right">Right side</option>
+                                    <option value="corner">Corner position</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="windowCount">Number of Windows</label>
+                                <input type="number" id="windowCount" min="0" max="10" value="1">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="elements">Current Elements in Room</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" value="water"> Water features (aquarium, fountain)</label>
+                                <label><input type="checkbox" value="plants"> Plants or flowers</label>
+                                <label><input type="checkbox" value="mirrors"> Mirrors</label>
+                                <label><input type="checkbox" value="crystals"> Crystals or stones</label>
+                                <label><input type="checkbox" value="metal"> Metal elements</label>
+                                <label><input type="checkbox" value="wood"> Wooden furniture</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Color Scheme -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-palette"></i> Current Color Scheme</h3>
+                        <div class="color-grid">
+                            <div class="color-option">
+                                <input type="radio" id="red" name="dominantColor" value="red">
+                                <label for="red" class="color-label red">Red</label>
+                            </div>
+                            <div class="color-option">
+                                <input type="radio" id="blue" name="dominantColor" value="blue">
+                                <label for="blue" class="color-label blue">Blue</label>
+                            </div>
+                            <div class="color-option">
+                                <input type="radio" id="green" name="dominantColor" value="green">
+                                <label for="green" class="color-label green">Green</label>
+                            </div>
+                            <div class="color-option">
+                                <input type="radio" id="yellow" name="dominantColor" value="yellow">
+                                <label for="yellow" class="color-label yellow">Yellow</label>
+                            </div>
+                            <div class="color-option">
+                                <input type="radio" id="white" name="dominantColor" value="white">
+                                <label for="white" class="color-label white">White</label>
+                            </div>
+                            <div class="color-option">
+                                <input type="radio" id="brown" name="dominantColor" value="brown">
+                                <label for="brown" class="color-label brown">Brown</label>
+                            </div>
+                            <div class="color-option">
+                                <input type="radio" id="gray" name="dominantColor" value="gray">
+                                <label for="gray" class="color-label gray">Gray</label>
+                            </div>
+                            <div class="color-option">
+                                <input type="radio" id="black" name="dominantColor" value="black">
+                                <label for="black" class="color-label black">Black</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Personal Information -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-user"></i> Personal Information (Optional)</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="birthYear">Birth Year</label>
+                                <input type="number" id="birthYear" min="1920" max="2020" placeholder="e.g., 1985">
+                            </div>
+                            <div class="form-group">
+                                <label for="purpose">Primary Purpose</label>
+                                <select id="purpose">
+                                    <option value="relaxation">Relaxation & Rest</option>
+                                    <option value="productivity">Productivity & Focus</option>
+                                    <option value="creativity">Creativity & Inspiration</option>
+                                    <option value="wealth">Wealth & Prosperity</option>
+                                    <option value="relationships">Love & Relationships</option>
+                                    <option value="health">Health & Wellness</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-magic"></i>
+                        Get Feng Shui Analysis
+                    </button>
+                </form>
+            </div>
+
+            <div id="results" class="results-container" style="display: none;">
+                <div class="results-header">
+                    <h2>Your Feng Shui Analysis</h2>
+                    <button id="newAnalysis" class="new-analysis-btn">
+                        <i class="fas fa-plus"></i> New Analysis
+                    </button>
+                </div>
+                <div id="analysisContent" class="analysis-content">
+                    <!-- Results will be populated here -->
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Feng Shui Advisory. Bringing harmony to your space.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
